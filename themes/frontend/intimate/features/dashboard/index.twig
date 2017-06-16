@@ -1,0 +1,70 @@
+{% extends "_layout.twig" %}
+{% block content %}
+{% for post in posts %}
+<!-- Blog Article Start-->
+<article>
+	<!-- Blog item Start -->
+	<div class="blog-item-wrap">
+
+		<!-- Post Format icon Start -->
+		<div class="post-format">
+			<span><i class="fa fa-camera"></i></span>
+		</div>
+
+		<!-- Post Format icon End -->
+		<h2 class="blog-title">
+            <a href="/blog/{{ post.alias }}">
+                {{ post.title }}
+            </a>
+		</h2>
+
+		<!-- Entry Meta Start-->
+		<div class="entry-meta">
+			<span class="meta-part">
+                <i class="ico-user"></i>
+                <a href="#">
+                    {{ post.user.display_name }}
+                </a>
+            </span>
+
+            <span class="meta-part">
+                <i class="ico-calendar-alt-fill"></i>
+                <a href="#">
+                    {{ post.published_at | moment }}
+                </a>
+            </span>
+
+		</div>
+		<!-- Entry Meta End-->
+
+        {% if post.image %}
+		<!-- Feature inner Start -->
+		<div class="feature-inner">
+			<a data-lightbox="roadtrip" href="/blog/{{ post.alias }}">
+                <img alt="" src="{{ post.image }}">
+            </a>
+		</div>
+		<!-- Feature inner End -->
+        {% endif %}
+
+		<!-- Post Content Start -->
+		<div class="post-content">
+			{{ post.intro_text | safe}}
+		</div>
+		<!-- Post Content End -->
+
+		<div class="entry-more">
+			<div class="pull-left">
+				<a class="btn btn-common" href=" /blog/{{ post.alias }} ">
+                    Read More
+                    <i class="ico-arrow-right"></i>
+                </a>
+			</div>
+		</div>
+	</div>
+	<!-- Blog item End -->
+</article>
+<!-- Blog Article End-->
+
+{% endfor %}
+{% endblock %}

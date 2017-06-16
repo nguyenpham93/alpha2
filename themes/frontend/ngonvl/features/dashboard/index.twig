@@ -1,0 +1,99 @@
+{% extends "_layout.twig" %}
+
+{% block content %}
+    <div id="wrap-posts">
+        {% for post in posts %}
+            <article>
+                <!-- First Blog Start -->
+                <div class="blog-item-wrap">
+                    <header class="entry-header">
+                        <div class="post-format">
+                            <span>
+                                <i class="fa fa-camera"></i>
+                            </span>
+                        </div>
+
+                        <p class="title-content">
+                            <a href=" /blog/posts/{{ post.id }}/{{ post.alias }} ">{{post.title}}</a>
+                        </p>
+                        <span class="ownby">Đăng bởi <span class="onwername">{{ post.user.display_name }}</span></span>
+                        <div class="social-info">
+                            <span class="viewcount">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                {{post.view_count}}
+                                lượt xem
+                            </span>
+
+                            <!-- Facebook like & count -->
+                            <span class="comment-count">
+                                <i class="fa fa-comments" aria-hidden="true"></i>
+                                <span class="fb-comments-count" data-href="http://localhost:8000/blog/posts/{{ post.id }}/{{ post.alias }}"></span>
+                                <a href=" /blog/posts/{{ post.id }}/{{ post.alias }} ">bình luận</a>
+                            </span>
+
+                            <!-- Facebook like & count -->
+                            <div class="fb-like" data-href="http://localhost:8000/blog/posts/{{ post.id }}/{{ post.alias }}" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></div>    
+                        </div>
+
+                        {#<div class="post-info">
+                            <span><i class="fa fa-user" aria-hidden="true"></i> {{ post.user.display_name }}</span>
+                            <span><i class="fa fa-calendar" aria-hidden="true"></i> {{ post.published_at | moment("DD-MM-YYYY") }}</span>
+                        </div>#}
+                    </header>
+
+                    <div class="content-main">
+                        <a href=" /blog/posts/{{ post.id }}/{{ post.alias }} ">
+                            <img class="img-responsive" src="{{post.image}}" alt="">
+                        </a>
+                    </div>
+                </div>
+                <!-- First Blog End -->    
+                </article>
+                <!-- jQuery -->
+                
+        {% endfor %}
+    </div>
+
+    <p id="loading" >
+	    <img src="/frontend/ngonvl/assets/img/loading.gif" alt="Loading…" />
+    </p>
+
+    <!-- Pagination Start -->
+    {{ totalPage | pagination(currentPage) | safe }}
+    <!-- Pagination End -->
+
+{% endblock %}
+
+{% block jsExtends %}
+
+    <script type="text/javascript" src="/frontend/ngonvl/assets/js/script.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var win = $(window);
+            var nextPage = {{currentPage}};
+
+            win.scroll(function() {
+                // End of the document reached?
+                if ($(document).height() - win.height() == win.scrollTop()) {
+                    if (nextPage == {{totalPage}}) return;
+
+                    $('#loading').show();
+                    nextPage++;
+
+                    $.ajax({
+                        url: '/page/' + nextPage,
+                        dataType: 'json',
+                        success: function(json) {
+                            let article = renderPost(json.posts);
+                            $('#wrap-posts').append(article);
+                            // Re parse all the facebook function
+                            FB.XFBML.parse();
+                            $('#loading').hide();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

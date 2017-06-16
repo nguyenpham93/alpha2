@@ -1,0 +1,22 @@
+{
+  "information": {
+    "theme_name": "9gag",
+    "theme_uri": "https://graygrids.com/item/intimate-free-personal-blog-and-portfolio-bootstrap-template/",
+    "author": "bluevn",
+    "author_email": "s3408985@gmail.com",
+    "version": "1.0",
+    "description": "Free Responsive Business HTML Template",
+    "license": "Copyright © 2014-2017 GrayGrids Inc. All rights reserved",
+    "tag": "bootstrap, corporate, html, responsive, corlate"
+  },
+  "sidebars": [
+    {
+      "name": "right-sidebar",
+      "title": "Right sidebar"
+    },
+    {
+      "name": "main-menu",
+      "title": "Main nenu"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+<!-- Blog Search Well -->
+<div class="well">
+	<h5 class="widget-title">{{ widget.title }}</h5>
+	<!-- Tab Panels -->
+		<div class="tab-content">
+			<!-- Tab Content 1 -->
+			<div class="tab-pane active" id="tab1">
+				<ul class="posts-list">
+                {% for post in posts %}
+					<li>
+						<div class="widget-thumb">
+							<a href="/blog/posts/{{ post.id }}/{{ post.alias }}">
+								<img style="max-width:70px;height:90px" alt="70" src="{{ post.image }}">
+							</a>
+						</div>
+
+						<div class="widget-content">
+							<a href="/blog/posts/{{ post.id }}/{{ post.alias }}">{{ post.title }}</a>
+                            <div class="social-info">
+                    <span class="viewcount">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                        {{post.view_count}}
+                    </span>
+
+                    <span class="comment-count">
+                        <i class="fa fa-comments" aria-hidden="true"></i>
+                        <span class="fb-comments-count" data-href="http://localhost:8000/blog/posts/{{ post.id }}/{{ post.alias }}"></span>
+                    </span>    
+
+                    <!-- Facebook like & count -->
+                    <div class="fb-like" data-href="http://localhost:8000/blog/posts/{{ post.id }}/{{ post.alias }}" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div>    
+                </div>
+							{#<div class="meta">
+								<span><i class="fa fa-user" aria-hidden="true"></i> {{ post['user.display_name'] }}</span>
+                                <span><i class="fa fa-calendar" aria-hidden="true"></i> {{ post.published_at | moment("DD-MM-YYYY") }}</span>
+							</div>#}
+						</div>
+						<div class="clearfix"></div>
+					</li>
+                    {% endfor %}
+				</ul>
+			</div>
+			
+			<a class="btn btn-common more" href="#"><span> Xem thêm</span> <i class="fa fa-chevron-right fa-1" aria-hidden="true"></i></a>
+		</div>
+</div>

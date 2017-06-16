@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- FB -->
+    <title>Blog Home - Start Bootstrap Template</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/frontend/ngonvl/assets/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/frontend/ngonvl/assets/css/blog-home.css" rel="stylesheet">
+
+    <!-- Font AweSome -->
+    <link href="/frontend/ngonvl/assets/fonts/font-awesome.min.css" madia="screen" rel="stylesheet"
+    type="text/css">
+
+    {% block cssExtends %}
+    {% endblock %}
+
+</head>
+
+<body>
+
+    <!-- FB Comment -->
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9&appId=1205250232917338";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+
+    <!-- Header Start -->
+    {% include "_header.twig" %}
+    <!-- Header End -->
+
+    <!-- Content Start -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7 content-container">
+                <!-- Blog Article Start-->
+                {% block content %}
+                {% endblock %}
+                <!-- Blog Article End-->            
+            </div>
+
+            <div class="col-md-4 col-md-offset-1">
+                <!-- SideBar Start-->
+                {% include "_sidebar.twig" %}
+                <!-- SideBar End-->
+            </div>
+        </div>
+        <!-- Content End -->
+
+        <!-- Footer Start -->
+        {% include "_footer.twig" %}
+        <!-- Footer End -->
+
+    </div>
+
+    <!-- jQuery -->
+    <script src="/frontend/ngonvl/assets/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/frontend/ngonvl/assets/js/bootstrap.min.js"></script>
+
+    {% block jsExtends %}
+    {% endblock %}
+
+</body>
+
+</html>

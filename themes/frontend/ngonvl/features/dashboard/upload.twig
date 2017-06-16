@@ -1,0 +1,111 @@
+{% extends "_layout.twig" %}
+
+{% block content %}
+
+<span id="error-status"></span>
+<form class="form-horizontal text-left" name="form_upload" method="post" action="/upload/image" id="form_upload" enctype="multipart/form-data">
+
+    <div class="form-group">
+        <label class="control-label col-sm-3" for="file">Chọn file ảnh (không quá 3MB)</label>
+        <div class="col-sm-9"> 
+            <input type="file" class="form-control" id="mko_xemcorebundle_photos_file" name="mko_xemcorebundle_photos[file]" required="required">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-3" for="Caption">Tiêu đề của ảnh</label>
+        <div class="col-sm-9"> 
+            <input class="form-control"  data-val-length="Không nhập quá 150 ký tự." data-val-length-max="150" data-val-required="Tiêu đề của ảnh là bắt buộc." id="image_title" name="image_title" type="text" value="">
+        </div>
+    </div>
+	
+	<p>
+		<input type="checkbox" id="IsSelfMade" name="mko_xemcorebundle_photos[is_self_made]" value="1">
+		<label class="checkboxLabel" for="IsSelfMade">Ảnh này do tui tự làm! (chỉ tick nếu ảnh này do bạn tự chụp, chủ sở hữu)</label>
+	</p>
+
+    <div class="form-group">
+        <label class="control-label col-sm-3" for="Source">Nguồn của ảnh</label>
+        <div class="col-sm-9"> 
+            <input class="form-control" data-val="true" data-val-length="Không nhập quá 1000 ký tự." data-val-length-max="1000" id="Source" name="mko_xemcorebundle_photos[source]" type="text" value="">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-3" for="Description">Description</label>
+        <div class="col-sm-9"> 
+            <textarea id="Description" class="form-control" name="Description">Description</textarea>
+        </div>
+    </div>
+	
+    <div class="form-group"> 
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" id="singlebutton" name="singlebutton" class=" form-control btn btn-info">Upload</button>
+        </div>
+    </div>
+</form>
+    
+
+{% endblock %}
+
+{% block jsExtends %}
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js" ></script>
+<script>
+
+$(document).ready(function() {
+
+     /* $('#form_upload').submit(function() {
+        $(this).ajaxSubmit({
+
+            error: function(xhr) {
+                status('Error: ' + xhr.status);
+            },
+
+            success: function(response) {
+                $('#error-status').text(response);
+                console.log(response);
+            }
+    });
+        //Very important line, it disable the page refresh.
+    return false;
+    }); */
+
+    $("#form_upload").submit(function(){
+
+    var formData = new FormData($(this)[0]);
+    console.log('here');
+
+    $.ajax({
+        url: '/upload/image',
+        type: 'POST',
+        data: formData,
+        success: function (data) {
+            $('#error-status').text(data + 'concac');
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+
+    return false;
+});   
+});
+
+
+/*$( "#form_upload" ).submit(function( event ) {
+    console.log('im in ajax');
+  $.ajax({
+        url : "/upload/image",
+        type : "POST",
+        dateType:"json",
+        data : $( this ).serialize(),
+        success : function (result){
+            $('#error-status').text(result);
+        }
+    });
+  event.preventDefault();
+});
+*/
+
+</script>
+{% endblock %}
