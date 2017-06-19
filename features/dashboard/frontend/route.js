@@ -9,24 +9,41 @@ module.exports = function (component) {
                 handler: controller.index
             }
         },
+        "/hot": {
+            get: {
+                handler: controller.hot
+            }
+        },
         "/upload": {
             get: {
-                handler: controller.upload_page
+                handler: controller.upload_page,
+                authenticate: true
             }
         },
         "/upload/image": {
             post: {
-                handler: controller.upload_image
+                handler: controller.upload_image,
+                authenticate: true
             }
         },
-        "/page/:page": {
+        "/notlogin": {
+            get: {
+                handler: controller.not_login
+            }
+        },
+        "/page-:page": {
             get: {
                 handler: controller.index2
             }
         },
+        "/hot/page-:page": {
+            get: {
+                handler: controller.hot_page
+            }
+        },
         "/login/facebook": {
             get: {
-                authenticate: 'facebook_login'
+                authenticate: 'facebook_login',
             }
         },
         "/login/facebook/callback": {
@@ -38,6 +55,11 @@ module.exports = function (component) {
             get: {
                 handler: controller.logout
             }
-        }
+        },
+        "/profile": {
+            get: {
+                handler: controller.profile
+            }
+        },
     }
 };

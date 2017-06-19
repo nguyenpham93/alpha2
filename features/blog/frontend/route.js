@@ -36,14 +36,14 @@ module.exports = function (component) {
         },
 
         // All Posts by author
-        "/blog/posts/:author([0-9]+)(/)?": {
+        "/blog/posts/author/:author([0-9]+)(/)?": {
             get: {
                 handler: controller.listByAuthor
             }
         },
-        "/blog/posts/:author/page-:page([0-9]+)?(/)?": {
+        "/blog/posts/author/:author/page-:page([0-9]+)?(/)?": {
             get: {
-                handler: controller.listByAuthor
+                handler: controller.listByAuthorJson
             }
         },
         "/blog/posts/search(/page/:page([0-9]+)/(:searchStr)?)?" : {

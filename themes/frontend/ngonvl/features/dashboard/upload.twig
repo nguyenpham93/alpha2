@@ -2,39 +2,42 @@
 
 {% block content %}
 
-<span id="error-status"></span>
+{#<div clss="status"><span id="error-status"></span></div>#}
+<div id ="stt_box" class="alert alert-success text-center">
+    <span id="box-status"></span>
+</div>
 <form class="form-horizontal text-left" name="form_upload" method="post" action="/upload/image" id="form_upload" enctype="multipart/form-data">
 
     <div class="form-group">
-        <label class="control-label col-sm-3" for="file">Chọn file ảnh (không quá 3MB)</label>
+        <label class="control-label col-sm-3" for="image_upload">Chọn file ảnh (không quá 3MB)</label>
         <div class="col-sm-9"> 
-            <input type="file" class="form-control" id="mko_xemcorebundle_photos_file" name="mko_xemcorebundle_photos[file]" required="required">
+            <input type="file" class="form-control" id="image_upload" name="image_upload" required="required">
         </div>
     </div>
 
     <div class="form-group">
-        <label class="control-label col-sm-3" for="Caption">Tiêu đề của ảnh</label>
+        <label class="control-label col-sm-3" for="image_title">Tiêu đề của ảnh</label>
         <div class="col-sm-9"> 
-            <input class="form-control"  data-val-length="Không nhập quá 150 ký tự." data-val-length-max="150" data-val-required="Tiêu đề của ảnh là bắt buộc." id="image_title" name="image_title" type="text" value="">
+            <input class="form-control"  data-val-length="Không nhập quá 150 ký tự." data-val-length-max="150" data-val-required="Tiêu đề của ảnh là bắt buộc." id="image_title" name="image_title" type="text" value="" required>
         </div>
     </div>
 	
 	<p>
-		<input type="checkbox" id="IsSelfMade" name="mko_xemcorebundle_photos[is_self_made]" value="1">
-		<label class="checkboxLabel" for="IsSelfMade">Ảnh này do tui tự làm! (chỉ tick nếu ảnh này do bạn tự chụp, chủ sở hữu)</label>
+		<input type="checkbox" id="is_owner" name="is_owner" value="1">
+		<label class="checkboxLabel" for="is_owner">Ảnh này do tui tự làm! (chỉ tick nếu ảnh này do bạn tự chụp, chủ sở hữu)</label>
 	</p>
 
     <div class="form-group">
-        <label class="control-label col-sm-3" for="Source">Nguồn của ảnh</label>
+        <label class="control-label col-sm-3" for="source_img">Nguồn của ảnh</label>
         <div class="col-sm-9"> 
-            <input class="form-control" data-val="true" data-val-length="Không nhập quá 1000 ký tự." data-val-length-max="1000" id="Source" name="mko_xemcorebundle_photos[source]" type="text" value="">
+            <input class="form-control" data-val="true" data-val-length="Không nhập quá 1000 ký tự." data-val-length-max="1000" id="source_img" name="source_img" type="text" value="">
         </div>
     </div>
 
     <div class="form-group">
-        <label class="control-label col-sm-3" for="Description">Description</label>
+        <label class="control-label col-sm-3" for="description">Description</label>
         <div class="col-sm-9"> 
-            <textarea id="Description" class="form-control" name="Description">Description</textarea>
+            <textarea id="description" class="form-control" name="description"></textarea>
         </div>
     </div>
 	
@@ -54,33 +57,32 @@
 
 $(document).ready(function() {
 
-     /* $('#form_upload').submit(function() {
-        $(this).ajaxSubmit({
-
-            error: function(xhr) {
-                status('Error: ' + xhr.status);
-            },
-
-            success: function(response) {
-                $('#error-status').text(response);
-                console.log(response);
-            }
-    });
-        //Very important line, it disable the page refresh.
-    return false;
-    }); */
-
+     
     $("#form_upload").submit(function(){
+    
+    // Check extension file
+    if(!is_allow_extension()) return false; 
 
-    var formData = new FormData($(this)[0]);
-    console.log('here');
+    // Check size of image
+    if (is_larger_than_3mb()) return false;
+    
+    let formData = new FormData($(this)[0]);
 
     $.ajax({
         url: '/upload/image',
         type: 'POST',
         data: formData,
         success: function (data) {
-            $('#error-status').text(data + 'concac');
+            $("#stt_box").removeClass("alert-success");
+            $("#stt_box").removeClass("alert-warning");
+            if (data.error){
+                $("#stt_box").addClass("alert-warning");
+                $("#box-status").text(data.error);
+            } else if (data.success) {
+                $("#stt_box").addClass("alert-success");
+                $('#box-status').text(data.success);
+                $('#form_upload')[0].reset();
+            }
         },
         cache: false,
         contentType: false,
@@ -91,21 +93,40 @@ $(document).ready(function() {
 });   
 });
 
-
-/*$( "#form_upload" ).submit(function( event ) {
-    console.log('im in ajax');
-  $.ajax({
-        url : "/upload/image",
-        type : "POST",
-        dateType:"json",
-        data : $( this ).serialize(),
-        success : function (result){
-            $('#error-status').text(result);
+function is_larger_than_3mb() {
+        let fileUpload = document.getElementById("image_upload");
+        if (typeof (fileUpload.files) != "undefined") {
+            let size = parseFloat(fileUpload.files[0].size / 1024).toFixed(2);
+            if (size >= 3000) {
+                $("#stt_box").removeClass("alert-success");
+                $("#stt_box").removeClass("alert-warning");
+                $("#stt_box").addClass("alert-warning");
+                $("#box-status").text("Ảnh không được quá 3MB");
+                return true;
+            } else {
+                return false;
+            }
         }
-    });
-  event.preventDefault();
-});
-*/
+    }
+
+function is_allow_extension() {
+    let fileUpload = document.getElementById("image_upload");
+    let exts = ['jpg', 'jpeg', 'png', 'gif' ];
+    let type = fileUpload.files[0].type.split('/')[1];
+        if (typeof (fileUpload.files) != "undefined") {
+            if (type && exts.indexOf(type) != -1){
+                return true;
+            } else {
+                $("#stt_box").removeClass("alert-success");
+                $("#stt_box").removeClass("alert-warning");
+                $("#stt_box").addClass("alert-warning");
+                $("#box-status").text("Hình ảnh không hợp lệ, vui lòng chọn hình ảnh định dạng (*.jpg, *.jpeg, *.png, *.gif)");
+                return false;
+            }
+        } else {
+
+        }
+}
 
 </script>
 {% endblock %}

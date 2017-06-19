@@ -38,7 +38,7 @@ module.exports = function (controller, component, app) {
 
     controller.postDetail = function (req, res) {
         let postId = req.params.postId;
-
+        console.log('here 2');
         app.feature.blog.actions.find({
             where: {
                 id: postId,
@@ -164,8 +164,9 @@ module.exports = function (controller, component, app) {
     };
 
     controller.listByAuthor = function (req, res) {
+        controller.checkAuth(req, res);
         let page = req.params.page || 1;
-        let number_item = app.getConfig('pagination').frontNumberItem || 10;
+        let number_item = app.getConfig('pagination').frontNumberItem || 5;
         let totalPage = 1;
 
         // Find all post
@@ -173,32 +174,73 @@ module.exports = function (controller, component, app) {
             include: [
                 {
                     model: app.models.user,
-                    attributes: ['id', 'display_name', 'user_login', 'user_email', 'user_image_url']
+                    attributes: ['id', 'display_name', 'user_email', 'user_image_url']
                 }
             ],
             where: {
                 type: 'post',
-                created_by: req.params.author,
+                created_by: parseInt(req.params.author),
                 published: 1
 
             },
             offset: (page - 1) * number_item,
             limit: number_item,
-            order: 'id DESC'
+            order: 'published_at DESC'
         }).then(function (results) {
             if (results) {
                 totalPage = Math.ceil(parseInt(results.count) / number_item) || 1;
 
                 // Render view
-                res.frontend.render('posts', {
+                res.frontend.render('user_post', {
                     posts: results.rows,
                     totalPage: totalPage,
                     currentPage: page,
-                    baseURL: '/blog/posts/' + req.params.author + '/page-{page}'
+                    baseURL: '/blog/posts/author/' + req.params.author,
+                    login       : req.session.login,  
+                    user        : req.session.user
                 });
             } else {
                 // Redirect to 404 if post not exist
                 res.frontend.render('_404');
+            }
+        }).catch(function (err) {
+            logger.error(err.stack)
+        });
+    };
+
+    controller.listByAuthorJson = function (req, res) {
+        console.log('here 3');
+        let page = req.params.page || 1;
+        let number_item = app.getConfig('pagination').frontNumberItem || 5;
+        let totalPage = 1;
+
+        // Find all post
+        app.feature.blog.actions.findAndCountAll({
+            include: [
+                {
+                    model: app.models.user,
+                    attributes: ['id', 'display_name', 'user_email', 'user_image_url']
+                }
+            ],
+            where: {
+                type: 'post',
+                created_by: parseInt(req.params.author),
+                published: 1
+
+            },
+            offset: (page - 1) * number_item,
+            limit: number_item,
+            order: 'published_at DESC'
+        }).then(function (results) {
+            if (results) {
+                totalPage = Math.ceil(parseInt(results.count) / number_item) || 1;
+
+                // Render view
+                res.json({
+                    posts: results.rows,
+                    totalPage: totalPage,
+                    currentPage: page
+                });
             }
         }).catch(function (err) {
             logger.error(err.stack)
@@ -249,6 +291,22 @@ module.exports = function (controller, component, app) {
             res.frontend.render('_404');
         });
     };
+
+    controller.checkAuth = function (req, res) {
+        let user = {};
+
+        if (req.isAuthenticated()) {
+            user.id = req.user.id;
+            user.user_image_facebook_url = req.user.user_image_facebook_url;
+            user.display_name = req.user.display_name;
+            
+            req.session.login = true;
+            req.session.user = user;
+        } else {
+            req.session.login = false;
+            req.session.user = user;
+        }
+    }
 
     controller.search = function (req, res) {
         let page = req.params.page || 1;

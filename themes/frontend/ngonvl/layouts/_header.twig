@@ -15,10 +15,10 @@
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
 				<li>
-					<a href="#">Hot</a>
+					<a href="/hot">Hot</a>
 				</li>
 				<li>
-					<a href="#">Mới</a>
+					<a href="/">Mới</a>
 				</li>
 				<li>
 					<a href="/upload"><i class="fa fa-cloud-upload fa-lg" aria-hidden="true"></i> Đăng bài</a>
@@ -32,8 +32,8 @@
 				<div class="dropdown">
 					<a href="#" class="avatar dropdown-toggle" data-toggle="dropdown"><img src="{{ user.user_image_facebook_url }}" alt="Smiley face"></a>
 					<ul class="dropdown-menu">
-						<li><a href="#">Ảnh của bạn</a></li>
-						<li><a href="#">Thông tin cá nhân</a></li>
+						<li><a href = "/blog/posts/author/{{ user.id }}">Ảnh của tôi</a></li>
+						<li><a href="/profile">Thông tin cá nhân</a></li>
 						<li><a href="/logout">Thoát</a></li>
 					</ul>
 				</div>

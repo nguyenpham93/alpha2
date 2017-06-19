@@ -59,8 +59,9 @@ module.exports = function (passport, app) {
                 res.locals.user = req.user;
                 next();
             } else {
-                if (req.originalUrl.indexOf('/admin') == -1)
-                    res.redirect('/');
+                if (req.originalUrl.indexOf('/admin') == -1){
+                    res.redirect('/notlogin');
+                }
                 else
                     res.redirect('/admin/login');
             }

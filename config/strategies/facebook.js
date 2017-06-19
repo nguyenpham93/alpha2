@@ -8,7 +8,7 @@ module.exports = function (passport, config, app){
     passport.use('facebook', new FacebookStrategy({
         clientID        : '1205250232917338',
         clientSecret    : 'e5a0e7a6e1fdaeb457f164b03464747e',
-        callbackURL     : 'http://localhost:8000/login/facebook/callback',
+        callbackURL     : 'http://thichmongdep.com/login/facebook/callback',
         profileFields: ['id', 'emails', 'name', 'photos']
     },
     
@@ -65,8 +65,8 @@ module.exports = function (passport, config, app){
                         user_status: 'publish',
                         display_name: displayName,
                         image: '/img/admin.jpg',
-                        role_id: 2,
-                        role_ids: '2',  
+                        // role_id: 2,
+                        // role_ids: '2',  
                         facebook_id : profile.id,
                         facebook_access_token : access_token,
                         user_image_facebook_url : profile.photos[0].value

@@ -229,6 +229,9 @@ footer {
 .onwername{
     color : #47b5f2;
 }
+.ownby > a:hover {
+    text-decoration: none !important;
+}
 
 .navbar-right .login > a {
     background-color: #444;
@@ -272,4 +275,8 @@ footer {
 
 .dropdown:hover .dropdown-menu {
     display: block;
+}
+
+.profile {
+    padding: 35px;
 }

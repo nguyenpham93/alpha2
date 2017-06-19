@@ -1,4 +1,6 @@
-1/ Khi /upload chua dang nhap duoc, bug
-2/ Lam sao de khi user upload hinh len thi tao thu muc fileman/uploads/users/:id_user/name.png
-3/ Can xem lai role de co the upload hinh va manage own post
-4/ file dang lam do : dashboard/frontend/controller/index.js
+redis
+sua lai link facebook khi co domain
+seo
+update bai viet len
+
+doi pass admin

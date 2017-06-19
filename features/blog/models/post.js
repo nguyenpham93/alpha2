@@ -102,6 +102,16 @@ module.exports = function (sequelize, DataTypes) {
         view_count : {
             type: DataTypes.INTEGER,
             defaultValue: 0,
+        },
+        source_img : {
+            type: DataTypes.STRING
+        },
+        is_owner :{
+            type: DataTypes.BOOLEAN,
+            isIn: {
+                args: [['0', '1', 0, 1, true, false]],
+                msg: 'Invalid boolean value'
+            }
         }
     }, {
         indexes: [

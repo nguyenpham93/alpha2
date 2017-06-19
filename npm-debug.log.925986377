@@ -7,7 +7,7 @@
 6 silly lifecycle arrowjs-cms@0.0.3~prestart: no script for prestart, continuing
 7 info lifecycle arrowjs-cms@0.0.3~start: arrowjs-cms@0.0.3
 8 verbose lifecycle arrowjs-cms@0.0.3~start: unsafe-perm in lifecycle true
-9 verbose lifecycle arrowjs-cms@0.0.3~start: PATH: /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/home/bluevn/Desktop/CMS-master/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+9 verbose lifecycle arrowjs-cms@0.0.3~start: PATH: /usr/local/lib/node_modules/npm/bin/node-gyp-bin:/home/bluevn/Desktop/CMS-master/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 10 verbose lifecycle arrowjs-cms@0.0.3~start: CWD: /home/bluevn/Desktop/CMS-master
 11 silly lifecycle arrowjs-cms@0.0.3~start: Args: [ '-c', 'node server.js' ]
 12 silly lifecycle arrowjs-cms@0.0.3~start: Returned: code: 1  signal: null

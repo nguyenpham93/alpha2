@@ -31,7 +31,6 @@ module.exports = function (controller, component, application) {
             
             // Check Auth
             controller.checkAuth (req,res);        
-            
             totalPage = Math.ceil( results.count/itemOfPage );
 
             res.frontend.render('index', {
@@ -41,7 +40,51 @@ module.exports = function (controller, component, application) {
                 itemOfPage  : itemOfPage,
                 currentPage : page,
                 login       : req.session.login,  
-                user        : req.session.user
+                user        : req.session.user,
+                baseURL     : ''
+            })
+
+        });
+    };
+
+    controller.hot = function (req, res) {
+
+        let page = req.params.page || 1;
+        let itemOfPage = application.getConfig("pagination").frontNumberItem || 5;
+        let totalPage = 1;
+
+        application.feature.blog.actions.findAndCountAll({
+            where : {
+                published : 1,
+                type : 'post'
+            },
+
+            include : [{
+                model : application.models.user
+            }],
+
+            limit  : itemOfPage,
+
+            offset : (page - 1) * itemOfPage,
+
+            order  : "view_count desc"
+
+        })
+        .then ((results) => {
+            
+            // Check Auth
+            controller.checkAuth (req,res);        
+            totalPage = Math.ceil( results.count/itemOfPage );
+
+            res.frontend.render('index', {
+                title       : 'ngonvl.com',
+                posts       : results.rows,
+                totalPage   : totalPage,
+                itemOfPage  : itemOfPage,
+                currentPage : page,
+                login       : req.session.login,  
+                user        : req.session.user,
+                baseURL     : '/hot'
             })
 
         });
@@ -57,7 +100,9 @@ module.exports = function (controller, component, application) {
 
     // Dang lam do
     controller.upload_image = function (req, res) {
-        let uploadPath = application.arrFolder + 'upload/fileman/uploads/users/' + '3' + '/';
+        controller.checkAuth(req,res);
+        let user = req.user;
+        let uploadPath = application.arrFolder + 'upload/fileman/uploads/users/' + user.id + '/';
         let fileName = '';
         let status = '';
         let fullPath = ''
@@ -72,37 +117,35 @@ module.exports = function (controller, component, application) {
         form.keepExtensions = true;
 
         form.parse(req, function (err, fields, files) {
-            let user = req.user;
+            if (!fields.is_owner){
+                fields.is_owner = '0';
+            }
             application.feature.blog.actions.create ({
-                title      : "please post me up 22",
+                title      : fields.image_title,
                 categories : ':1:',
-                intro_text : 'hellongonvl intro text',
-                full_text  : '<p><img alt="" src="/fileman/uploads/users/3/' + fileName + '"/></p>',
-                image      :  '/fileman/uploads/users/3/' + fileName,
+                intro_text : fields.description || '',
+                full_text  : '<p><img alt="" src="/fileman/uploads/users/' + user.id +'/' + fileName + '"/></p>',
+                image      :  '/fileman/uploads/users/' + user.id +'/' + fileName,
                 published  : 0,
-                created_by : '3',
-                author_visible : true
+                created_by : user.id,
+                author_visible : true,
+                is_owner   : fields.is_owner || '0',
+                source_img : fields.source_img || ''
             },'post').then( function(post) {
-                res.end('Your post was uploaded! Please take time for admin checking');
+                res.json({success : "Đăng ảnh thành công, vui lòng đợi xét duyệt! ^^"});
             }).catch (function(){
                 application.utils.fs.remove(fullPath)
-                res.end('error');
+                res.json({error : 'Đã có lỗi khi upload ảnh của bạn, vui lòng chọn một tiêu đề khác!'});
             });
         });
 
         form.on('fileBegin', function (name, file) {
             // update name file
             let fileType = file['type'].split('/')[1];
-
-            // CHeck type of image
-            if (fileType === 'png' || fileType === 'jpeg' || fileType === 'gif' || fileType === 'jpeg') {
-                let d = new Date();
-                fileName = shortid.generate() + '_' + d.getTime() + '.' + fileType; 
-                file.path = uploadPath + fileName;
-                fullPath = file.path; 
-            } else {
-                res.end('Error');
-            }
+            let d = new Date();
+            fileName = shortid.generate() + '_' + d.getTime() + '.' + fileType; 
+            file.path = uploadPath + fileName;
+            fullPath = file.path; 
         });
 
     };
@@ -112,19 +155,22 @@ module.exports = function (controller, component, application) {
         let user = {};
 
         if (req.isAuthenticated()) {
-            console.log('dalogin');
             user.id = req.user.id;
             user.user_image_facebook_url = req.user.user_image_facebook_url;
             user.display_name = req.user.display_name;
-            
+            user.email = req.user.user_email;
+
             req.session.login = true;
             req.session.user = user;
         } else {
-            console.log('chua login');
             req.session.login = false;
             req.session.user = user;
         }
     }
+
+    controller.not_login = function (req, res) {
+        res.frontend.render('not_login');
+    };
 
     controller.logout = function (req, res) {
         req.session.login = false;
@@ -168,4 +214,49 @@ module.exports = function (controller, component, application) {
 
         });
     };
+
+    controller.hot_page = function (req, res) {
+        let page = req.params.page || 1;
+        let itemOfPage = application.getConfig("pagination").frontNumberItem || 5;
+        let totalPage = 1;
+
+        application.feature.blog.actions.findAndCountAll({
+            where : {
+                published : 1,
+                type : 'post'
+            },
+
+            include : [{
+                model : application.models.user
+            }],
+
+            limit  : itemOfPage,
+
+            offset : (page - 1) * itemOfPage,
+
+            order  : "view_count desc"
+
+        })
+        .then ((results) => {
+            totalPage = Math.ceil( results.count/itemOfPage );
+
+            res.json({
+                posts       : results['rows'],
+                totalPage   : totalPage,
+                itemOfPage  : itemOfPage,
+                currentPage : page
+            });
+
+        });
+    };
+
+    controller.profile = function (req, res){
+        controller.checkAuth(req,res);
+        res.frontend.render('profile', {
+            title       : 'Profile Detail',
+            login       : req.session.login,  
+            user        : req.session.user
+        });
+    }
+
 };

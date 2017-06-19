@@ -14,17 +14,21 @@ function renderPost (posts) {
                                         '<p class="title-content">' +
                                             '<a href="/blog/posts/' + post.id + '/' + post.alias + '">' + post.title + '</a>' +
                                         '</p>' +
+                                        '<span class="ownby">Đăng bởi <a href = "/blog/posts/author/' + post.created_by + '"><span class="onwername">' + post.user.display_name + '</span></a></span>' + 
+
                                         '<div class="social-info">' +
                                             '<span class="viewcount">' +
                                                 '<i class="fa fa-eye" aria-hidden="true"></i>' +
-                                                ' lượt xem' +
+                                                post.view_count + ' lượt xem' +
                                             '</span>' +
 
                                             '<span class="comment-count">' +
                                                 '<i class="fa fa-comments" aria-hidden="true"></i>' +
-                                                '<span class="fb-comments-count" data-href="http://localhost:8000/blog/posts/' +  post.id + '/' +  post.alias + '"></span>' +
-                                                ' bình luận' +
+                                                '<span class="fb-comments-count" data-href="http://thichmongdep.com/blog/posts/' +  post.id + '/' +  post.alias + '"></span>' +
+                                                '<a href="/blog/posts/' + post.id + '/' + post.alias + '"> bình luận ' +
                                             '</span>' +
+
+                                            '<div class="fb-like" data-href="http://thichmongdep.com/blog/posts/' + post.id + '/' + post.alias + '" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></div>' +
                                         '</div>' + 
                                     '</header>' + 
 

@@ -10,7 +10,7 @@ module.exports = {
                     '<li style="list-style: none">';
 
                         for ( let i = 1; i <= totalPage ; i++) {
-                            result += '<span><a href="' + link + '/page/' + i + '" >' + i + '</a></span>';
+                            result += '<span><a href="' + link + '/page-' + i + '" >' + i + '</a></span>';
                         }
                         
                     result += '</li>' +
